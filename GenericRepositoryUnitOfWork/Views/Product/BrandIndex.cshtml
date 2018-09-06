@@ -1,0 +1,24 @@
+﻿@model IList<Brand>
+@{
+    ViewData["Title"] = "BrandIndex";
+}
+
+<h2>Brand Index</h2>
+<a asp-action="AddBrand" asp-controller="Product" class="btn btn-info">Add Brand</a>
+<hr/>
+
+<table class="table table-striped">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Total Product</td>
+        </tr>
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Products.Count</td>
+        </tr>
+    }
+</table>

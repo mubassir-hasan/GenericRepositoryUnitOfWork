@@ -1,0 +1,15 @@
+﻿@model Brand
+@{
+    ViewData["Title"] = "AddBrand";
+}
+    <form method="post" asp-action="AddBrand">
+        <div class="row">
+            <div class="col-md-6">
+                <label>Name</label>
+                <input type="text" asp-for="Name" class="form-control" required=""/>
+            </div>
+           
+        
+            <input type="submit" value="Save" class="btn btn-success"/>
+        </div>
+    </form>

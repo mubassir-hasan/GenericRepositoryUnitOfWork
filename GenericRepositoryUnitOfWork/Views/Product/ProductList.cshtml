@@ -1,0 +1,22 @@
+﻿@model IList<Product>
+@{
+    ViewData["Title"] = "ProductList";
+}
+<a asp-action="AddProduct" asp-controller="Product" class="btn btn-info">Add Product</a>
+<hr/>
+<table class="table table-striped">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Brand Name</td>
+        </tr>
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Brand.Name</td>
+        </tr>
+    }
+</table>
+

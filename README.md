@@ -18,12 +18,88 @@ Now flow the steps carefully
 
 [Repository Location](GenericRepositoryUnitOfWork/Repository)
 
-## StartUp.cs
-'''
+###### StartUp.cs
+```
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-'''
+```
+###### Product.cs
+```
+ public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int BrandId { get; set; }
+        public Brand Brand { get; set; }
+    }
+```
+
+###### Brand.cs
+```
+ public class Brand
+    {
+          public int Id { get; set; }
+        public string Name { get; set; }
+        
+        public List<Product> Products { get; set; }
+    }
+```
+
+Initialize in every controller where you making Database Call
+```
+private readonly IUnitOfWork _unitOfWork;
+```
+
+###### ProductController.cs
+```
+ public class ProductController
+    {
+         public IActionResult AllProducts(){
+          var model = _unitOfWork.Repository<Brand>().GetAll();
+            //do something if you want
+
+            return View(model);
+         }
+         
+          public IActionResult AllProductsWithInclude(){
+          var model = _unitOfWork.Repository<Brand>().GetAllInclude(b=>b.Brand);
+            //do something if you want
+
+            return View(model);
+         }
+         
+         [HttpPost]
+        public IActionResult AddBrand(Brand model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Something wrong");
+                return View(model);
+            }
+
+            _unitOfWork.Repository<Brand>().Insert(model);
+            return RedirectToAction("BrandIndex");
+        }
+        
+         public async Task<IActionResult> AddProductAsync()
+        {
+            vif (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("","Something wrong");
+                return View(product);
+            }
+
+            await _unitOfWork.Repository<Product>().InsertAsync(product);
+            return RedirectToAction("ProductList");
+        }
+        public async Task<IActionResult> SearchByName(string name){
+        var model=await _unitOfWork.Repository<Product>().FindAllAsync(x=>x.Name.Contains(name));
+        
+        return View(model);
+        }
+    }
+```

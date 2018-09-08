@@ -27,7 +27,7 @@ Now flow the steps carefully
             
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 ```
-###### Product.cs
+###### Product.cs (Model)
 ```
  public class Product
     {
@@ -38,7 +38,7 @@ Now flow the steps carefully
     }
 ```
 
-###### Brand.cs
+###### Brand.cs (Model)
 ```
  public class Brand
     {
@@ -58,10 +58,15 @@ private readonly IUnitOfWork _unitOfWork;
 ```
  public class ProductController
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public ProductController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
          public IActionResult AllProducts(){
           var model = _unitOfWork.Repository<Brand>().GetAll();
             //do something if you want
-
             return View(model);
          }
          

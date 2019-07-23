@@ -47,13 +47,10 @@ namespace GenericRepositoryUnitOfWork.Repository
         Task<ICollection<T>> FindAllAsync(Expression<Func<T, bool>> match);
 
         T Insert(T entity);
-        Task<T> InsertAsync(T entity);
 
         void Update(T updated);
-        Task<T> UpdateAsync(T updated);
 
         void Delete(T t);
-        Task<int> DeleteAsync(T t);
 
         int Count();
         Task<int> CountAsync();

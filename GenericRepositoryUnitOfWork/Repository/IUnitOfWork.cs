@@ -9,7 +9,8 @@ namespace GenericRepositoryUnitOfWork.Repository
     {
         IRepository<T> Repository<T>() where T : class;
 
-        Task<int> Commit();
+        Task<int> CommitAsync();
+        void Commit();
 
         void Rollback();
     }

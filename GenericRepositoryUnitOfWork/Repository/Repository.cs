@@ -13,12 +13,9 @@ namespace GenericRepositoryUnitOfWork.Repository
 
         private readonly ApplicationDbContext _context;
         public string ErrorMessage { get; set; } = string.Empty;
-        private readonly IUnitOfWork _unitOfWork;
-
         public Repository(ApplicationDbContext context)
         {
             _context = context;
-            _unitOfWork = new UnitOfWork(context);
         }
 
         public int Count()
@@ -39,20 +36,9 @@ namespace GenericRepositoryUnitOfWork.Repository
                 throw new ArgumentNullException(nameof(t));
             }
             _context.Set<T>().Remove(t);
-            _context.SaveChanges();
         }
 
-        public async Task<int> DeleteAsync(T t)
-        {
-            if (_context.Set<T>() == null)
-            {
-                ErrorMessage = "The item you trying to Delete is not in Database anymore";
-                throw new ArgumentNullException(nameof(t));
-            }
-            _context.Set<T>().Remove(t);
-            return await _unitOfWork.Commit();
-        }
-
+       
         public bool Exist(Expression<Func<T, bool>> predicate)
         {
             var exist = _context.Set<T>().Where(predicate);
@@ -222,17 +208,10 @@ namespace GenericRepositoryUnitOfWork.Repository
         public T Insert(T entity)
         {
             _context.Set<T>().Add(entity);
-            _context.SaveChanges();
             return entity;
         }
 
-        public async Task<T> InsertAsync(T entity)
-        {
-            _context.Set<T>().Add(entity);
-            await _unitOfWork.Commit();
-            return entity;
-        }
-
+       
         public ICollection<T> PaggedList(int? pageSize, int? page, params Expression<Func<T, object>>[] navigationProperties)
         {
             IQueryable<T> query = _context.Set<T>();
@@ -287,21 +266,11 @@ namespace GenericRepositoryUnitOfWork.Repository
                 ErrorMessage = "No Database detected";
                 throw new ArgumentNullException(nameof(updated));
             }
-            _context.SaveChanges();
-        }
-
-        public async Task<T> UpdateAsync(T updated)
-        {
-            if (updated == null)
-            {
-                return null;
-            }
 
             _context.Set<T>().Attach(updated);
             _context.Entry(updated).State = EntityState.Modified;
-            await _unitOfWork.Commit();
-
-            return updated;
         }
+
+        
     }
 }

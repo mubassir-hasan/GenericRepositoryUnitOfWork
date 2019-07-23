@@ -33,10 +33,14 @@ namespace GenericRepositoryUnitOfWork.Repository
             Repositories.Add(typeof(T), repo);
             return repo;
         }
-
-        public async Task<int> Commit()
+        public async Task<int> CommitAsync()
         {
             return await _dbContext.SaveChangesAsync();
+        }
+
+        void IUnitOfWork.Commit()
+        {
+            _dbContext.SaveChanges();
         }
 
         public void Rollback()
@@ -63,5 +67,7 @@ namespace GenericRepositoryUnitOfWork.Repository
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+       
     }
 }

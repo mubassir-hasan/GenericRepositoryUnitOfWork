@@ -42,6 +42,8 @@ namespace GenericRepositoryUnitOfWork.Controllers
             }
 
             _unitOfWork.Repository<Brand>().Insert(model);
+            //save new data to database
+            _unitOfWork.Commit();
             return RedirectToAction("BrandIndex");
         }
 
@@ -62,7 +64,7 @@ namespace GenericRepositoryUnitOfWork.Controllers
         
 
         [HttpPost]
-        public IActionResult AddProduct(Product product)
+        public async Task<IActionResult> AddProduct(Product product)
         {
             if (!ModelState.IsValid)
             {
@@ -71,6 +73,8 @@ namespace GenericRepositoryUnitOfWork.Controllers
             }
 
             _unitOfWork.Repository<Product>().Insert(product);
+            //save asynchronously to database
+            await _unitOfWork.CommitAsync();
             return RedirectToAction("ProductList");
         }
 
